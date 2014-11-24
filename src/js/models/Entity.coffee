@@ -41,12 +41,8 @@ statDescriptors = {
 }
 
 Entity = Backbone.Model.extend({
-  getStat: (statName) ->
-    value = @get(statName)
-    if statName of statDescriptors
-      return $.extend(statDescriptors[statName], {value})
-    else
-      return {value}
+  getStatDesc: (statName) ->
+    return statDescriptors[statName]
 })
 
 module.exports = Entity

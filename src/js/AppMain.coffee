@@ -1,3 +1,5 @@
+require('../css/main.scss')
+
 Backbone = require('backbone')
 React = require('react')
 $ = require('jquery')
@@ -11,11 +13,11 @@ $( =>
   $.getJSON(server, (entityVars) =>
     entity = new Entity(entityVars)
 
-    console.log entity.getStat("str")
-  )
-  React.render(
-    React.createElement(CharacterSheet, null)
-    document.getElementById("box")
+    window.entity = entity
+    React.render(
+      React.createElement(CharacterSheet, {entityModel: entity})
+      document.getElementById("app-container")
+    )
   )
 )
 
