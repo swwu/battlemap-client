@@ -40,9 +40,38 @@ statDescriptors = {
   }
 }
 
-Entity = Backbone.Model.extend({
-  getStatDesc: (statName) ->
-    return statDescriptors[statName]
-})
+server = "http://localhost:10010"
 
-module.exports = Entity
+makeModels = (gamespace) =>
+  EntityModel = Backbone.Model.extend({
+    idAttribute: "id"
+
+    urlRoot: ->
+      "#{server}/gamespace/#{gamespace}/entity"
+
+    getVar: (varName) ->
+      return @get("vars")[varName]
+
+    setVars: (setVars) ->
+      vars = @get("vars")
+      for k,v of setVars
+        vars[k] = v
+      @trigger('change') # fire the change obj since we didn't trigger
+
+    getStatDesc: (statName) ->
+      return statDescriptors[statName]
+  })
+
+  EntityCollection = Backbone.Collection.extend({
+    model: EntityModel
+
+    url: ->
+      "#{server}/gamespace/#{gamespace}/entity"
+  })
+
+  return {EntityModel, EntityCollection}
+
+module.exports = {
+  withGamespace: (gamespace) =>
+    makeModels(gamespace)
+}
