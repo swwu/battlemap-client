@@ -11,21 +11,13 @@ Entity = require('./models/Entity')
 
 $( =>
 
-  {EntityModel, EntityCollection} = Entity.withGamespace("testspace")
-  entity = new EntityModel({id:"test"})
-  entity.fetch({success: (entity, response, options) =>
-    entity.on("change", =>
-      console.log "ASDSADSADASD2"
-    )
-
-    setInterval( =>
-      entity.save()
-    , 2000)
-
+  store = new Entity.Store("testspace")
+  entity = new Entity.Model({id:"test"}, store)
+  entity.fetch((err, cb) =>
     React.render(
       React.createElement(CharacterSheet, {entityModel: entity})
       document.getElementById("app-container")
     )
-  })
+  )
 )
 

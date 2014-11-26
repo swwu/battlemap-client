@@ -1,5 +1,6 @@
-Backbone = require('backbone')
-$ = require('jquery')
+assign = require('object-assign')
+
+BaseModel = require('./BaseModel')
 
 isAttribute = (stat) ->
   stat.split('_')[0] in ["str", "dex", "con", "int", "wis", "cha"]
@@ -42,36 +43,64 @@ statDescriptors = {
 
 server = "http://localhost:10010"
 
-makeModels = (gamespace) =>
-  EntityModel = Backbone.Model.extend({
-    idAttribute: "id"
+class EntityModel extends BaseModel
+  constructor: (attrs, @store) ->
+    super()
+    @_set(attrs)
 
-    urlRoot: ->
-      "#{server}/gamespace/#{gamespace}/entity"
+  setStore: (@store) ->
 
-    getVar: (varName) ->
-      return @get("vars")[varName]
+  getUrl: -> "#{server}/gamespace/#{@store.gamespace}/entity/#{@id}"
 
-    setVars: (setVars) ->
-      vars = @get("vars")
-      for k,v of setVars
-        vars[k] = v
-      @trigger('change') # fire the change obj since we didn't trigger
+  fetch: (cb) ->
+    @_doFetch(@getUrl(), (err, data) =>
+      if err?
+        return console.error(err)
+      @_set(data)
+      cb?(data)
+    )
 
-    getStatDesc: (statName) ->
-      return statDescriptors[statName]
-  })
+  # PUT/POST returns full persisted object (since vars are evaluated)
+  put: (cb) ->
+    @_doPut(@getUrl(), @attributes, (err, data) =>
+      if err?
+        return console.error(err)
+      @_set(data)
+      cb?(data)
+    )
 
-  EntityCollection = Backbone.Collection.extend({
-    model: EntityModel
+  _set: (attrs) ->
+    @id = attrs.id
+    @attributes = attrs
+    @emit("change")
 
-    url: ->
-      "#{server}/gamespace/#{gamespace}/entity"
-  })
+  update: (attrs) ->
+    @_set(attrs)
+    @put()
 
-  return {EntityModel, EntityCollection}
+  destroy: ->
+
+  getVar: (varName) ->
+    @attributes.vars[varName]
+
+  getBaseValue: (baseValueName) ->
+    @attributes.baseValues[baseValueName]
+
+  getStatDesc: (id) ->
+    statDescriptors[id]
+
+  setBaseValue: (baseValueName, newValue) ->
+    @attributes.baseValues[baseValueName] = newValue
+    @update(@attributes)
+
+class EntityStore
+  constructor: (@gamespace) ->
+    @entities = {}
+
+  update: (id, payload) ->
+
 
 module.exports = {
-  withGamespace: (gamespace) =>
-    makeModels(gamespace)
+  Model: EntityModel
+  Store: EntityStore
 }

@@ -17,14 +17,12 @@ PrimaryStatContainer = React.createClass({
     @props.entityModel.off('change', @_forceUpdate)
 
   handleChange: (e) ->
-    setObj = {}
-    setObj["#{@props.attr}_base"] = e.target.value
-    @props.entityModel.setVars(setObj)
+    @props.entityModel.setBaseValue("#{@props.attr}_base", parseInt(e.target.value))
 
   render: ->
     attrLabel = @props.entityModel.getStatDesc(@props.attr).short
+    attrBase = @props.entityModel.getBaseValue("#{@props.attr}_base")
     attrVal = @props.entityModel.getVar(@props.attr)
-    attrBase = @props.entityModel.getVar("#{@props.attr}_base")
     attrMod = @props.entityModel.getVar("#{@props.attr}_mod")
     div({className: "primaryStatContainer"},
       label({className: "statLabel"}, attrLabel),
