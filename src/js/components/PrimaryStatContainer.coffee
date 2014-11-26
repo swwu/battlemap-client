@@ -8,14 +8,13 @@ PrimaryStatContainer = React.createClass({
 
   # dummy method to allow proper cleanup of backbone model listener
   _forceUpdate: ->
-    console.log "force-update"
     @forceUpdate()
 
   componentDidMount: ->
-    @props.entityModel.on('change', => @_forceUpdate())
+    @props.entityModel.on('change', @_forceUpdate)
 
   componentWillUnmount: ->
-    @props.entityModel.off('change', => @_forceUpdate())
+    @props.entityModel.off('change', @_forceUpdate)
 
   handleChange: (e) ->
     setObj = {}
@@ -27,8 +26,6 @@ PrimaryStatContainer = React.createClass({
     attrVal = @props.entityModel.getVar(@props.attr)
     attrBase = @props.entityModel.getVar("#{@props.attr}_base")
     attrMod = @props.entityModel.getVar("#{@props.attr}_mod")
-    console.log "re-rendering"
-    console.log attrBase
     div({className: "primaryStatContainer"},
       label({className: "statLabel"}, attrLabel),
       input({type: "text", value: attrBase, onChange: @handleChange}),
