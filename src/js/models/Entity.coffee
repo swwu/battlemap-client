@@ -8,7 +8,7 @@ isAttribute = (stat) ->
 isSkill = (stat) ->
   stat.indexOf("skill") == 0
 
-statDescriptors = {
+varDescriptors = {
   str: {
     name: "Strength"
     short: "Str"
@@ -86,8 +86,8 @@ class EntityModel extends BaseModel
   getBaseValue: (baseValueName) ->
     @attributes.baseValues[baseValueName]
 
-  getStatDesc: (id) ->
-    statDescriptors[id]
+  getVarDesc: (id) ->
+    varDescriptors[id]
 
   setBaseValue: (baseValueName, newValue) ->
     @attributes.baseValues[baseValueName] = newValue

@@ -33,3 +33,14 @@ div.primaryStatContainer {
     width: 40px;
   }
 }
+
+div.additiveStatContainer {
+  div.statBox {
+    margin-left: 10px;
+    font-size: 30px;
+    width: 40px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    display: inline-block;
+  }
+}

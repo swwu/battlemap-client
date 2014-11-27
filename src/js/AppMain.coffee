@@ -5,7 +5,7 @@ React = require('react')
 $ = require('jquery')
 _ = require('underscore')
 
-CharacterSheet = require('./components/CharacterSheet')
+CharacterSheet = require('./components/CharacterSheet/CharacterSheet')
 
 Entity = require('./models/Entity')
 
