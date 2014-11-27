@@ -18,18 +18,26 @@ CharacterSheet = React.createClass({
         })
 
     $saveBoxes = for st in ["fort_save", "ref_save", "will_save"]
-      React.createElement(AdditiveStatContainer,
-        {
-          entityModel: @props.entityModel
-          mainVar: {
-            varName: st
-            label: st
-          }
-          varList: [{
-            varName: "#{st}_base"
-            label: "Base #{st}"
-          }]
-        })
+      do (st) =>
+        React.createElement(AdditiveStatContainer,
+          {
+            entityModel: @props.entityModel
+            mainVar: {
+              varAccessor: st
+              label: st
+            }
+            varList: [{
+              varAccessor: "#{st}_base"
+              label: "Base"
+            },{
+              varAccessor: "#{st}_abmod_bonus"
+              label: "Ability"
+            },{
+              varAccessor: (entityModel) ->
+                entityModel.getVar(st) - (entityModel.getVar("#{st}_base") + entityModel.getVar("#{st}_abmod_bonus"))
+              label: "Misc"
+            }]
+          })
 
     div(null, $primaryBoxes..., $saveBoxes...)
 })

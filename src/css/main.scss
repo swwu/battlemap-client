@@ -4,6 +4,8 @@ body {
 }
 
 div.primaryStatContainer {
+  margin-bottom: 5px;
+
   label.statLabel {
     font-size: 30px;
     width: 60px;
@@ -15,7 +17,7 @@ div.primaryStatContainer {
     font-size: 30px;
     width: 40px;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     display: inline-block;
   }
   label.modifier {
@@ -25,9 +27,11 @@ div.primaryStatContainer {
     display: inline-block;
   }
 
-
   input {
+    margin: 0;
     margin-left: 10px;
+    background-color: #eef;
+    border: 1px solid #ccc;
     font-size: 30px;
     padding: 8px;
     width: 40px;
@@ -35,12 +39,20 @@ div.primaryStatContainer {
 }
 
 div.additiveStatContainer {
+  margin-bottom: 5px;
+
+  label.statBoxLabel {
+    font-size: 14px;
+    width: 60px;
+    text-align: right;
+    display: inline-block;
+  }
   div.statBox {
     margin-left: 10px;
     font-size: 30px;
     width: 40px;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     display: inline-block;
   }
 }

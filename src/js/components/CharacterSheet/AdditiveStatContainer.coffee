@@ -6,9 +6,12 @@ _ = require('underscore')
 # handles stats that display all the bonuses that are added together
 # props:
 #   entityModel - the model of the entity whose stats we want to show
-#   mainVar - {varName, label}
+#   mainVar - {varAccessor, label}. varAccessor is either a function which
+#   will be called with (entityModel) as its arg, and the return value will be
+#   used, or is a value, which will be used as a variable name to retrieve a
+#   value from entityModel
 #   varList - list of stats / descriptive text for each:
-#   [{varName, label},...]
+#   [{varAccessor, label},...]
 AdditiveStatContainer = React.createClass({
   displayName: "AdditiveStatContainer"
 
@@ -23,14 +26,22 @@ AdditiveStatContainer = React.createClass({
     @props.entityModel.off('change', @_forceUpdate)
 
   render: ->
-    mainVar = @props.mainVar.varName
+    mainVarAccessor = @props.mainVar.varAccessor
     mainLabel = @props.mainVar.label
 
-    $statBoxes = for {varName, label} in @props.varList
-      div({className:"statBox"}, @props.entityModel.getVar(varName))
+    getAccessorVal = (acc) =>
+      if _.isFunction(acc)
+        return acc(@props.entityModel)
+      else
+        return @props.entityModel.getVar(acc)
+
+    $statBoxes = for {varAccessor, label} in @props.varList
+      div({className:"statBox"}, getAccessorVal(varAccessor))
 
     return div({className: "additiveStatContainer"},
-      div({className:"statBox"}, @props.entityModel.getVar(mainVar)),
+      React.DOM.label({className:"statBoxLabel"}, mainLabel),
+      div({className:"statBox"},
+        getAccessorVal(mainVarAccessor)),
       $statBoxes...
     )
 })
